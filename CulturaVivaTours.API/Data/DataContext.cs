@@ -7,5 +7,6 @@ namespace CulturaVivaTours.API.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<Guia> Guias { get; set; }
+        public DbSet<RutaAsignada> RutasAsignadas { get; set; }
     }
 }
