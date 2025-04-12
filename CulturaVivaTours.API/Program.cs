@@ -1,3 +1,6 @@
+using CulturaVivaTours.API.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,19 +11,39 @@ builder.Services.AddControllers();
 
 //Inyecciones de dependencias
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "CulturaVivaTour API",
+        Version = "v1"
+    });
+
+
+});
+
+builder.Services.AddDbContext<DataContext>(x=>x.UseSqlServer("name=DefaultConnection"));
+
+
+
 
 var app = builder.Build();
 
+
+
 //Midlewares
 
-app.UseSwagger();
-app.UseSwaggerUI();
+
 
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.jason", "CulturaVivaTour API v1");
+    });
     app.MapOpenApi();
 }
 
