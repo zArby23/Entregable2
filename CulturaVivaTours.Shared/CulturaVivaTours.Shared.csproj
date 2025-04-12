@@ -6,9 +6,4 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CulturaVivaTours.API\CulturaVivaTours.API.csproj" />
-    <ProjectReference Include="..\CulturaVivaTours.WEB\CulturaVivaTours.WEB.csproj" />
-  </ItemGroup>
-
 </Project>
