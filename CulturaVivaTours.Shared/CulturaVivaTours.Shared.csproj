@@ -5,9 +5,4 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CulturaVivaTours.WEB\CulturaVivaTours.WEB.csproj" />
-  </ItemGroup>
-
 </Project>

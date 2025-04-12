@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace CulturaVivaTours.Shared.Entities
@@ -14,12 +15,12 @@ namespace CulturaVivaTours.Shared.Entities
         [Display(Name = "Ingrese su nombre.")]
         [Required]
         [MaxLength(20)]
-        public string? FirstName { get; set; }
+        public string FirstName { get; set; }
 
         [Display(Name = "Ingrese su apellido.")]
         [Required]
         [MaxLength(20)]
-        public string? LastName { get; set; }
+        public string LastName { get; set; }
 
         [Display(Name = "Ingrese su cedula.")]
         [Required]
@@ -31,7 +32,7 @@ namespace CulturaVivaTours.Shared.Entities
         [Display(Name = "Ingrese el idioma que habla.")]
         [Required]
         [MaxLength(20)]
-        public string? Language { get; set; }
+        public string Language { get; set; }
 
         [Display(Name = "Ingrese los meses de experiencia que tiene (solo el número).")]
         [Required]
@@ -39,7 +40,9 @@ namespace CulturaVivaTours.Shared.Entities
 
         [Display(Name = "Seleccione su especialidad.")]
         [Required]
-        public string? Speciality { get; set; }
+        public string Speciality { get; set; }
 
+        [JsonIgnore]
+        public ICollection<RutaAsignada> RutasAsignadas { get; set; }
     }
 }

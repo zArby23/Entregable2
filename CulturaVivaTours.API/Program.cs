@@ -11,6 +11,8 @@ builder.Services.AddControllers();
 
 //Inyecciones de dependencias
 
+
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
@@ -24,17 +26,9 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddDbContext<DataContext>(x=>x.UseSqlServer("name=DefaultConnection"));
 
-
-
-
 var app = builder.Build();
 
-
-
 //Midlewares
-
-
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
