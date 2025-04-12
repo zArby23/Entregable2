@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace CulturaVivaTours.Shared.Entities
 {
-    public class RutaGuia
+    public class RutaAsignada
     {
-        [JsonIgnore]
-        public Ruta Ruta { get; set; }
-        public int RutaId { get; set; }
+        public int id { get; set; }
 
         [JsonIgnore]
-        public Guia Guia { get; set; }
+        public Ruta ruta { get; set; }
 
+        [JsonIgnore]
+        public Guia guia { get; set; }
     }
 }
