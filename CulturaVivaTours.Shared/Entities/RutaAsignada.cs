@@ -9,12 +9,12 @@ namespace CulturaVivaTours.Shared.Entities
 {
     public class RutaAsignada
     {
-        public int id { get; set; }
+        public int Id { get; set; }
 
         [JsonIgnore]
-        public Ruta ruta { get; set; }
+        public Ruta Ruta { get; set; }
 
         [JsonIgnore]
-        public Guia guia { get; set; }
+        public Guia Guia { get; set; }
     }
 }
