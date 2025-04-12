@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace CulturaVivaTours.Shared.Entities
@@ -34,7 +35,10 @@ namespace CulturaVivaTours.Shared.Entities
         [Display(Name = "Ingrese el idioma que se hablara durante la ruta.")]
         [Required]
         [MaxLength(20,ErrorMessage = "Ingrese una lengua de menos de 20 caracteres.")]
-        public string Lenguage { get; set; }
+        public string Language { get; set; }
+
+        [JsonIgnore]
+        public ICollection<RutaAsignada> RutasAsignadas { get; set; }
 
 
     }
