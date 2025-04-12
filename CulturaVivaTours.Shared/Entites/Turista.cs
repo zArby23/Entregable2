@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace CulturaVivaTours.Shared.Entites
@@ -10,7 +11,7 @@ namespace CulturaVivaTours.Shared.Entites
     public class Turista
     {
         
-        public string id { get; set; }
+        public int Id { get; set; }
  
 
         [Display(Name = "Nombre turista")] //Pone una Descripcion del campo
@@ -41,6 +42,13 @@ namespace CulturaVivaTours.Shared.Entites
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime Disponibility { get; set; }
 
+
+
+
+
+        //Conexion con la tabla calificacion
+        [JsonIgnore]
+        public ICollection<Calificacion> Calificaciones { get; set; }
 
 
 

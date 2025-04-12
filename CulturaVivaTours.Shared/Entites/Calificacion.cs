@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace CulturaVivaTours.Shared.Entites
 {
-    internal class Calificacion
+    public class Calificacion
     {
       
-        public string id { get; set; }//Primary key
-
-
-        public string FullName { get; set; }
+        public int Id { get; set; }//Primary key
 
 
         [Display(Name = "Puntuacion del turista")]
@@ -27,7 +25,16 @@ namespace CulturaVivaTours.Shared.Entites
         public string Coment { get; set; }
 
 
-       
+        //Conexiones
+
+        [JsonIgnore]
+        public Turista turista { get; set; } //Conexion con turista
+
+        [JsonIgnore]
+        public PuntoInteres PuntoInteres { get; set; }//Conexion con PuntoInteres
+
+
+
 
     }
 }
