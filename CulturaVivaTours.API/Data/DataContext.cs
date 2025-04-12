@@ -1,4 +1,4 @@
-﻿using CulturaVivaTours.Shared.Entities;
+﻿using CulturaVivaTours.Shared.Entites;
 using Microsoft.EntityFrameworkCore;
 
 namespace CulturaVivaTours.API.Data
@@ -7,5 +7,8 @@ namespace CulturaVivaTours.API.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
+        public DbSet<PuntoInteres> PuntosInteres { get; set; }
+
+        public DbSet<Proveedor> Proveedores { get; set; }
     }
 }
