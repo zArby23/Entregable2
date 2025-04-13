@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace CulturaVivaTours.Shared.Entites
+namespace CulturaVivaTours.Shared.Entities
 {
     public class Turista
     {
@@ -23,7 +23,7 @@ namespace CulturaVivaTours.Shared.Entites
         [Display(Name = "Nacionalidad turista")]
         [Required]
         [MaxLength(40,ErrorMessage = "Nacionalidad Demasiado largo")]
-        public string Nacionality { get; set; }
+        public string Nationality { get; set; }
 
         [Display(Name = "Idioma turista")]
         [Required]
