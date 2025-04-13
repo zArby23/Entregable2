@@ -13,7 +13,6 @@ namespace CulturaVivaTours.Shared.Entites
       
         public int Id { get; set; }//Primary key
 
-
         [Display(Name = "Puntuacion del turista")]
         [Required]
         [MaxLength(40, ErrorMessage = "Nacionalidad Demasiado largo")]
@@ -24,17 +23,12 @@ namespace CulturaVivaTours.Shared.Entites
         [MaxLength(40, ErrorMessage = "Idioma Demasiado largo")]
         public string Coment { get; set; }
 
-
         //Conexiones
 
         [JsonIgnore]
-        public Turista turista { get; set; } //Conexion con turista
+        public Turista Turista { get; set; } //Conexion con turista
 
         [JsonIgnore]
         public PuntoInteres PuntoInteres { get; set; }//Conexion con PuntoInteres
-
-
-
-
     }
 }
