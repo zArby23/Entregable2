@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using CulturaVivaTours.Shared.Entities;
-using CulturaVivaTours.Shared.Entites;
 namespace CulturaVivaTours.API.Data
 {
     public class DataContext : DbContext
@@ -15,13 +14,15 @@ namespace CulturaVivaTours.API.Data
 
         public DbSet<Calificacion> Calificaciones { get; set; }
         
-        public DbSet<Ruta> Rutas { get; set; }
+        public DbSet<Ruta> Rutas { get; set; }     
+
+        public DbSet<PuntoInteres> PuntosInteres { get; set; }
+
+        public DbSet<Proveedor> Proveedores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-        }      
+        }
     }
 }
-
- 
