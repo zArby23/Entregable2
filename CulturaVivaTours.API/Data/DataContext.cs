@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using CulturaVivaTours.Shared.Entities;
 using CulturaVivaTours.Shared.Entites;
 namespace CulturaVivaTours.API.Data
 {
@@ -12,7 +13,7 @@ namespace CulturaVivaTours.API.Data
    
         public DbSet<Turista> Turistas { get; set; }
 
-        public DbSet<Calificacion> calificacions { get; set; }
+        public DbSet<Calificacion> Calificaciones { get; set; }
         
         public DbSet<Ruta> Rutas { get; set; }
 
