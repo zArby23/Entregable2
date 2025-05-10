@@ -15,16 +15,12 @@ namespace CulturaVivaTours.API.Data
 
         public async Task SeedAsync()
         {
-
             await _context.Database.EnsureCreatedAsync();
             await CheckRuta();
             await CheckGuia();
-            await CheckCalificacion();
             await CheckProveedor();
             await CheckTurista();
-            await CheckPuntoInteres();
         }
-
         public async Task CheckRuta()
         {
             if (!_context.Rutas.Any())
@@ -37,17 +33,9 @@ namespace CulturaVivaTours.API.Data
                     Experience = "Arriesgada",
                     Language = "Español"
                 });
-
             }
-
-
-
-
             await _context.SaveChangesAsync();
-
-
         }
-
 
         public async Task CheckGuia()
         {
@@ -62,36 +50,10 @@ namespace CulturaVivaTours.API.Data
                     Experience = 2,
                     Speciality = "Arriesgada"
                 });
-
             }
-
-
-
-
             await _context.SaveChangesAsync();
-
-
         }
 
-        public async Task CheckCalificacion()
-        {
-            if (!_context.Calificaciones.Any())
-            {
-                _context.Calificaciones.Add(new Calificacion
-                {
-                    Grade = "4.5",
-                    Comment = "Muy bonito",
-                });
-
-            }
-
-
-
-
-            await _context.SaveChangesAsync();
-
-
-        }
 
         public async Task CheckProveedor()
         {
@@ -106,35 +68,7 @@ namespace CulturaVivaTours.API.Data
                 });
 
             }
-
-
-
-
             await _context.SaveChangesAsync();
-
-
-        }
-
-        public async Task CheckPuntoInteres()
-        {
-            if (!_context.PuntosInteres.Any())
-            {
-                _context.PuntosInteres.Add(new PuntoInteres
-                {
-                    Descripcion = "Mirador con vistas a un lago",
-                    Ubicacion = "Pereira",
-                    TipoActividad = "Caminata",
-                    HorarioEstimado = DateTime.Parse("2025-10-05 10:35:00")
-                });
-
-            }
-
-
-
-
-            await _context.SaveChangesAsync();
-
-
         }
 
 
@@ -147,17 +81,11 @@ namespace CulturaVivaTours.API.Data
                     FullName = "Jon Jairo Paredas",
                     Nationality = "Veneco",
                     Language = "Chamo",
-                    Disponibility = DateTime.Parse("2025-10-05 10:35:00"),
+                    RestringFood = "Ninguna",
+                    Disponibility = DateTime.Parse("2025-10-05 10:35:00")
                 });
-
             }
-
-
-
-
             await _context.SaveChangesAsync();
-
-
         }
     }
 }
