@@ -4,6 +4,7 @@ using CulturaVivaTours.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CulturaVivaTours.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250510175155_UpdatedDatabase")]
+    partial class UpdatedDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,8 +38,10 @@ namespace CulturaVivaTours.API.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
-                    b.Property<double>("Grade")
-                        .HasColumnType("float");
+                    b.Property<string>("Grade")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<int>("PuntoInteresId")
                         .HasColumnType("int");
@@ -62,6 +67,7 @@ namespace CulturaVivaTours.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Cedula")
+                        .HasMaxLength(10)
                         .HasColumnType("int");
 
                     b.Property<int>("Experience")
@@ -84,8 +90,7 @@ namespace CulturaVivaTours.API.Migrations
 
                     b.Property<string>("Speciality")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -137,6 +142,7 @@ namespace CulturaVivaTours.API.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<DateTime>("HorarioEstimado")
+                        .HasMaxLength(50)
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ProveedorId")
@@ -193,6 +199,7 @@ namespace CulturaVivaTours.API.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("Time")
+                        .HasMaxLength(1)
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -232,6 +239,7 @@ namespace CulturaVivaTours.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Disponibility")
+                        .HasMaxLength(40)
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FullName")

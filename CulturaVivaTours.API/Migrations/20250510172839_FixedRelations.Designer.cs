@@ -4,6 +4,7 @@ using CulturaVivaTours.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CulturaVivaTours.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250510172839_FixedRelations")]
+    partial class FixedRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,18 +38,20 @@ namespace CulturaVivaTours.API.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
-                    b.Property<double>("Grade")
-                        .HasColumnType("float");
+                    b.Property<string>("Grade")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
-                    b.Property<int>("PuntoInteresId")
+                    b.Property<int?>("PuntoInteresid")
                         .HasColumnType("int");
 
-                    b.Property<int>("TuristaId")
+                    b.Property<int?>("TuristaId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PuntoInteresId");
+                    b.HasIndex("PuntoInteresid");
 
                     b.HasIndex("TuristaId");
 
@@ -62,6 +67,7 @@ namespace CulturaVivaTours.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Cedula")
+                        .HasMaxLength(10)
                         .HasColumnType("int");
 
                     b.Property<int>("Experience")
@@ -84,8 +90,7 @@ namespace CulturaVivaTours.API.Migrations
 
                     b.Property<string>("Speciality")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -137,12 +142,13 @@ namespace CulturaVivaTours.API.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<DateTime>("HorarioEstimado")
+                        .HasMaxLength(50)
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProveedorId")
+                    b.Property<int?>("Proveedorid")
                         .HasColumnType("int");
 
-                    b.Property<int>("RutaId")
+                    b.Property<int?>("RutaId")
                         .HasColumnType("int");
 
                     b.Property<string>("TipoActividad")
@@ -157,7 +163,7 @@ namespace CulturaVivaTours.API.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("ProveedorId");
+                    b.HasIndex("Proveedorid");
 
                     b.HasIndex("RutaId");
 
@@ -193,6 +199,7 @@ namespace CulturaVivaTours.API.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("Time")
+                        .HasMaxLength(1)
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -208,10 +215,10 @@ namespace CulturaVivaTours.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("GuiaId")
+                    b.Property<int?>("GuiaId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RutaId")
+                    b.Property<int?>("RutaId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -232,6 +239,7 @@ namespace CulturaVivaTours.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Disponibility")
+                        .HasMaxLength(40)
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FullName")
@@ -262,15 +270,11 @@ namespace CulturaVivaTours.API.Migrations
                 {
                     b.HasOne("CulturaVivaTours.Shared.Entities.PuntoInteres", "PuntoInteres")
                         .WithMany("Calificaciones")
-                        .HasForeignKey("PuntoInteresId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PuntoInteresid");
 
                     b.HasOne("CulturaVivaTours.Shared.Entities.Turista", "Turista")
                         .WithMany("Calificaciones")
-                        .HasForeignKey("TuristaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TuristaId");
 
                     b.Navigation("PuntoInteres");
 
@@ -281,15 +285,11 @@ namespace CulturaVivaTours.API.Migrations
                 {
                     b.HasOne("CulturaVivaTours.Shared.Entities.Proveedor", "Proveedor")
                         .WithMany("PuntosInteres")
-                        .HasForeignKey("ProveedorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Proveedorid");
 
                     b.HasOne("CulturaVivaTours.Shared.Entities.Ruta", "Ruta")
                         .WithMany("PuntosInteres")
-                        .HasForeignKey("RutaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RutaId");
 
                     b.Navigation("Proveedor");
 
@@ -300,15 +300,11 @@ namespace CulturaVivaTours.API.Migrations
                 {
                     b.HasOne("CulturaVivaTours.Shared.Entities.Guia", "Guia")
                         .WithMany("RutasAsignadas")
-                        .HasForeignKey("GuiaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GuiaId");
 
                     b.HasOne("CulturaVivaTours.Shared.Entities.Ruta", "Ruta")
                         .WithMany("RutasAsignadas")
-                        .HasForeignKey("RutaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RutaId");
 
                     b.Navigation("Guia");
 
