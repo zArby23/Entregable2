@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace CulturaVivaTours.Shared.Entities
 {
     public class Proveedor
     {
-        public int id { get; set; }//Primary key
+        public int id { get; set; }
 
         [Display(Name = "Descripcion del proveedor")]
         [Required]
@@ -28,5 +29,8 @@ namespace CulturaVivaTours.Shared.Entities
 
         [Display(Name = "Disponibilidad del proveedor")]
         public Boolean Disponible { get; set; }
+
+        [JsonIgnore]
+        public ICollection<PuntoInteres> PuntosInteres{ get; set; }
     }
 }

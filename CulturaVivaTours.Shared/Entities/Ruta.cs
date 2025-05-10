@@ -24,7 +24,7 @@ namespace CulturaVivaTours.Shared.Entities
 
         [Display(Name = "Cuanto dura en horas.")]
         [Required]
-        [MaxLength(1,ErrorMessage = "La ruta no dura mas de 10 horas.")]
+        [Range(0,10)]
         public int Time { get; set; }
 
         [Display(Name = "Tipo de experiencia de la ruta.")]
@@ -40,6 +40,7 @@ namespace CulturaVivaTours.Shared.Entities
         [JsonIgnore]
         public ICollection<RutaAsignada> RutasAsignadas { get; set; }
 
-
+        [JsonIgnore]
+        public ICollection<PuntoInteres> PuntosInteres { get; set; }
     }
 }

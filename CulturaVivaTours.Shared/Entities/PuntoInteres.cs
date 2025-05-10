@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Converters;
 
 namespace CulturaVivaTours.Shared.Entities
 {
@@ -33,18 +34,21 @@ namespace CulturaVivaTours.Shared.Entities
 
         [Display(Name = "Hora de llegada al punto de interes")]
         [Required]
-        [MaxLength(50, ErrorMessage = "Mucho texto")]
-        [DisplayFormat(DataFormatString = "{0:hh:mm}")]
-        public DateTime HorarioEstimado { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.DateTime)]
+        public DateTime HorarioEstimado{ get; set; }
 
 
         [JsonIgnore]
         public Proveedor Proveedor { get; set; }
+
+        public int ProveedorId { get; set; }
 
         [JsonIgnore]
         public ICollection<Calificacion> Calificaciones { get; set; }
 
         [JsonIgnore]
         public Ruta Ruta { get; set; }
+        public int RutaId { get; set; }
     }
 }

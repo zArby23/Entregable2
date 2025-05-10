@@ -24,7 +24,7 @@ namespace CulturaVivaTours.Shared.Entities
 
         [Display(Name = "Ingrese su cedula.")]
         [Required]
-        [MaxLength(10, ErrorMessage = "La cédula no debe superar los 10 caracteres.")]
+        [Range(0, 9999999999, ErrorMessage = "La cedula debe ser de máximo 10 digitos.")]
         public int Cedula { get; set; }
 
         public string FullName => $"{FirstName} {LastName}";
@@ -36,10 +36,12 @@ namespace CulturaVivaTours.Shared.Entities
 
         [Display(Name = "Ingrese los meses de experiencia que tiene (solo el número).")]
         [Required]
+        [Range(0, 120)]
         public int Experience { get; set; }
 
         [Display(Name = "Seleccione su especialidad.")]
         [Required]
+        [MaxLength(20)]
         public string Speciality { get; set; }
 
         [JsonIgnore]

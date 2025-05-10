@@ -13,8 +13,10 @@ namespace CulturaVivaTours.Shared.Entities
 
         [JsonIgnore]
         public Ruta Ruta { get; set; }
+        public int RutaId { get; set; }
 
         [JsonIgnore]
         public Guia Guia { get; set; }
+        public int GuiaId { get; set; }
     }
 }
