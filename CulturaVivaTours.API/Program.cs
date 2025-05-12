@@ -29,6 +29,14 @@ builder.Services.AddTransient<SeedDb>();
 
 var app = builder.Build();
 
+//Midlewares
+
+app.UseCors(x => x
+.AllowAnyMethod()
+.AllowAnyHeader()
+.SetIsOriginAllowed(origin => true)
+.AllowCredentials());
+
 SeedData(app);
 
 void SeedData(WebApplication app)
@@ -42,7 +50,7 @@ void SeedData(WebApplication app)
     }
 }
 
-//Midlewares
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
