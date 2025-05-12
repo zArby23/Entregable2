@@ -1,0 +1,39 @@
+﻿﻿@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+
+@page "/guias/create"
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h1>Crear Guía</h1>
+
+<GuiasForm @ref="guiaForm" Guia="guia" OnValidSubmit="Create" ReturnAction="Return"/>
+
+@code {
+    public Guia guia = new();
+    public GuiasForm guiaForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/guias", guia);
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessage();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+            return;
+        }
+        else
+        {
+            guiaForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("/guias");
+        }
+        navigationManager.NavigateTo("/guias");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/guias");
+    }
+}
