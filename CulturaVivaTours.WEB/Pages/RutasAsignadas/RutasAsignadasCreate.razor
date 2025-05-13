@@ -1,0 +1,40 @@
+﻿﻿@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+
+@page "/rutas-asignadas/create"
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h1>Asignar Rutas</h1>
+
+<RutasAsignadasForm @ref="rutaAsignadaForm" RutaAsignada="rutaAsignada" OnValidSubmit="Create" ReturnAction="Return"/>
+
+
+@code {
+    public RutaAsignada rutaAsignada = new();
+    public RutasAsignadasForm rutaAsignadaForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/rutasasignadas", rutaAsignada);
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessage();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+            return;
+        }
+        else
+        {
+            rutaAsignadaForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("/rutas-asignadas");
+        }
+        navigationManager.NavigateTo("/rutas-asignadas");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/rutas-asignadas");
+    }
+}

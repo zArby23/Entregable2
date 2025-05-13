@@ -1,0 +1,71 @@
+﻿﻿@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+
+@page "/rutas-asignadas/edit/{Id:int}"
+
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+
+<h1>Editar Rutas asignadas</h1>
+@if (rutaAsignada is null)
+{
+    <div class="spinner" />
+    <p>Cargando...</p>
+}
+else
+{
+    <RutasAsignadasForm @ref="rutaAsignadaForm" RutaAsignada="rutaAsignada" OnValidSubmit="Edit" ReturnAction="Return" />
+}
+
+@code {
+    private RutaAsignada rutaAsignada;
+    private RutasAsignadasForm rutaAsignadaForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await repository.GetAsync<RutaAsignada>($"/api/rutasasignadas/{Id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/rutas-asignadas");
+                return;
+            }
+            else
+            {
+                var message = await responseHttp.GetErrorMessage();
+                await swal.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+        }
+        else
+        {
+            rutaAsignada = responseHttp.Response;
+        }
+
+    }
+
+    private async Task Edit()
+    {
+        var responseHttp = await repository.PutAsync($"/api/rutasasignadas", rutaAsignada);
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessage();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+        }
+        else
+        {
+            rutaAsignadaForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("/rutas-asignadas");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/rutas-asignadas");
+    }
+}
