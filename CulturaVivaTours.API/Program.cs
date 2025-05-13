@@ -11,6 +11,8 @@ builder.Services.AddControllers();
 
 //Inyecciones de dependencias
 
+
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
@@ -23,16 +25,30 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddDbContext<DataContext>(x=>x.UseSqlServer("name=DefaultConnection"));
-
-
-
+builder.Services.AddTransient<SeedDb>();
 
 var app = builder.Build();
 
-
-
 //Midlewares
 
+app.UseCors(x => x
+.AllowAnyMethod()
+.AllowAnyHeader()
+.SetIsOriginAllowed(origin => true)
+.AllowCredentials());
+
+SeedData(app);
+
+void SeedData(WebApplication app)
+{
+    IServiceScopeFactory? scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+
+    using (IServiceScope? scope = scopedFactory!.CreateScope())
+    {
+        SeedDb? service = scope.ServiceProvider.GetService<SeedDb>();
+        service!.SeedAsync().Wait();
+    }
+}
 
 
 
@@ -42,9 +58,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.jason", "CulturaVivaTour API v1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "CulturaVivaTour API v1");
     });
-    app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();

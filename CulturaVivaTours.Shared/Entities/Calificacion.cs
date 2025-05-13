@@ -6,35 +6,30 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace CulturaVivaTours.Shared.Entites
+namespace CulturaVivaTours.Shared.Entities
 {
     public class Calificacion
     {
       
         public int Id { get; set; }//Primary key
 
-
         [Display(Name = "Puntuacion del turista")]
         [Required]
-        [MaxLength(40, ErrorMessage = "Nacionalidad Demasiado largo")]
-        public string Puntuation { get; set; }
+        [Range(0.0,5.0, ErrorMessage = "Ingrese una nota entre 0.0 y 5.0")]
+        public double Grade { get; set; }
 
         [Display(Name = "Comentario del turista")]
         [Required]
         [MaxLength(40, ErrorMessage = "Idioma Demasiado largo")]
-        public string Coment { get; set; }
-
-
-        //Conexiones
+        public string Comment { get; set; }
 
         [JsonIgnore]
-        public Turista turista { get; set; } //Conexion con turista
+        public PuntoInteres PuntoInteres { get; set; }
+        public int PuntoInteresId { get; set; }
 
         [JsonIgnore]
-        public PuntoInteres PuntoInteres { get; set; }//Conexion con PuntoInteres
-
-
-
+        public Turista Turista { get; set; }
+        public int TuristaId { get; set; }
 
     }
 }

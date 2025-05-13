@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace CulturaVivaTours.Shared.Entites
+namespace CulturaVivaTours.Shared.Entities
 {
     public class Turista
     {
@@ -14,16 +14,16 @@ namespace CulturaVivaTours.Shared.Entites
         public int Id { get; set; }
  
 
-        [Display(Name = "Nombre turista")] //Pone una Descripcion del campo
-        [Required] //Hace que sea obligatorio
-        [MaxLength(75, ErrorMessage = "Nombre Demasiado largo")]//Caracteres maximos y mensaje de error
+        [Display(Name = "Nombre turista")]
+        [Required]
+        [MaxLength(75, ErrorMessage = "Nombre Demasiado largo")]
         public string FullName { get; set; }
 
 
         [Display(Name = "Nacionalidad turista")]
         [Required]
         [MaxLength(40,ErrorMessage = "Nacionalidad Demasiado largo")]
-        public string Nacionality { get; set; }
+        public string Nationality { get; set; }
 
         [Display(Name = "Idioma turista")]
         [Required]
@@ -36,24 +36,13 @@ namespace CulturaVivaTours.Shared.Entites
         public string RestringFood { get; set; }
 
 
-        [Display(Name = "Idioma turista")]
+        [Display(Name = "Disponibilidad (hora)")]
         [Required]
-        [MaxLength(40, ErrorMessage = "Idioma Demasiado largo" )]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.DateTime)]
         public DateTime Disponibility { get; set; }
 
-
-
-
-
-        //Conexion con la tabla calificacion
         [JsonIgnore]
         public ICollection<Calificacion> Calificaciones { get; set; }
-
-
-
-
-
-
     }
 }

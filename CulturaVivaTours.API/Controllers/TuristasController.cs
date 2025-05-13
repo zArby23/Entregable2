@@ -1,5 +1,5 @@
 ﻿using CulturaVivaTours.API.Data;
-using CulturaVivaTours.Shared.Entites;
+using CulturaVivaTours.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

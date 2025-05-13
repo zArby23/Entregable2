@@ -1,5 +1,5 @@
 ﻿using CulturaVivaTours.API.Data;
-using CulturaVivaTours.Shared.Entites;
+using CulturaVivaTours.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,11 +9,11 @@ namespace CulturaVivaTours.API.Controllers
 
         [ApiController]
         [Route("/api/Calificaciones")]
-        public class CalificacionsController : ControllerBase
+        public class CalificacionesController : ControllerBase
         {
             private readonly DataContext _Context;
 
-            public CalificacionsController(DataContext context)
+            public CalificacionesController(DataContext context)
             {
                 _Context = context;
             }
@@ -23,7 +23,7 @@ namespace CulturaVivaTours.API.Controllers
             [HttpGet]
             public async Task<ActionResult> Get() //select * from table
             {
-                return Ok(await _Context.calificacions.ToListAsync());//200
+                return Ok(await _Context.Calificaciones.ToListAsync());//200
             }
 
 
@@ -33,7 +33,7 @@ namespace CulturaVivaTours.API.Controllers
             [HttpGet("{id:int}")]//Busca con un parametro de entrada
             public async Task<ActionResult> Get(int id) //select * from table where...
             {
-                var Calificacions = await _Context.calificacions.FirstOrDefaultAsync(x => x.Id == id);
+                var Calificacions = await _Context.Calificaciones.FirstOrDefaultAsync(x => x.Id == id);
 
                 if (Calificacions == null)
                 {
@@ -50,7 +50,7 @@ namespace CulturaVivaTours.API.Controllers
             public async Task<ActionResult> Post(Calificacion calificacion)
             {
 
-                _Context.calificacions.Add(calificacion);
+                _Context.Calificaciones.Add(calificacion);
 
                 await _Context.SaveChangesAsync();
 
@@ -65,7 +65,7 @@ namespace CulturaVivaTours.API.Controllers
             public async Task<ActionResult> Put(Calificacion calificacion)
             {
 
-                _Context.calificacions.Update(calificacion);
+                _Context.Calificaciones.Update(calificacion);
 
                 await _Context.SaveChangesAsync();
 
@@ -78,7 +78,7 @@ namespace CulturaVivaTours.API.Controllers
             [HttpDelete("{id:int}")]
             public async Task<ActionResult> Delete(int id) //select * from table where...
             {
-                var FilasAfectadas = await _Context.calificacions
+                var FilasAfectadas = await _Context.Calificaciones
 
                     .Where(x => x.Id == id)
                     .ExecuteDeleteAsync();
