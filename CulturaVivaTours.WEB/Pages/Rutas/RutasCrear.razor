@@ -1,0 +1,41 @@
+﻿﻿﻿@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+
+@page "/rutas/create"
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+
+<h3>Crear Rutas</h3>
+
+<RutasForm @ref="rutaForm" Ruta="ruta" OnValidSubmit="Create" ReturnAction="Return"/>
+    
+
+@code {
+    public Ruta ruta = new();
+    public RutasForm rutaForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/rutas", ruta);
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessage();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+            return;
+        }
+        else
+        {
+            rutaForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("/rutas");
+        }
+        navigationManager.NavigateTo("/rutas");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/rutas");
+    }
+}
