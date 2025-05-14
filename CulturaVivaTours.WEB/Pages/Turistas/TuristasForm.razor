@@ -1,44 +1,44 @@
 ﻿﻿@using CulturaVivaTours.Shared.Entities
+
 @inject NavigationManager Navigation
 @inject SweetAlertService swal
 
 <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
-<EditForm EditContext="editContext" OnInvalidSubmit="OnValidSubmit">
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     
     <div class="mb-3">
         <div class="mb-3">
 
-        <div>
-            <label>Nombre</label>
-            <InputText width="10" @bind-Value="Turista.FullName" />
-            <ValidationMessage For="@(() => Turista.FullName)" />
-        </div>
+                <label>Nombre</label>
+            <div>
+                <InputText width="10" @bind-Value="Turista.FullName" />
+                <ValidationMessage For="@(() => Turista.FullName)" />
+            </div>
 
-        <div>
-            <label>Nacionalidad</label>
-            <InputText width="10" @bind-Value="Turista.Nationality" />
-            <ValidationMessage For="@(() => Turista.Nationality)" />
-        </div>
+                <label>Nacionalidad</label>
+            <div>
+                <InputText width="10" @bind-Value="Turista.Nationality" />
+                <ValidationMessage For="@(() => Turista.Nationality)" />
+            </div>
 
-        <div>
-            <label>Idioma</label>
-            <InputText width="10" @bind-Value="Turista.Language" />
-            <ValidationMessage For="@(() => Turista.Language)" />
-        </div>
+                <label>Idioma</label>
+            <div>
+                <InputText width="10" @bind-Value="Turista.Language" />
+                <ValidationMessage For="@(() => Turista.Language)" />
+            </div>
 
-        <div>
-            <label>Alergias(comida)</label>
-            <InputText width="10" @bind-Value="Turista.RestringFood" />
-            <ValidationMessage For="@(() => Turista.RestringFood)" />
-        </div>
+                <label>Alergias(comida)</label>
+            <div>
+                <InputText width="10" @bind-Value="Turista.RestringFood" />
+                <ValidationMessage For="@(() => Turista.RestringFood)" />
+            </div>
 
-        <div>
-            <label>Disponibilidad</label>
-            <InputDate width="10" @bind-Value="Turista.Disponibility" />
-            <ValidationMessage For="@(() => Turista.Disponibility)" />
-        </div>
-
+                <label>Disponibilidad</label>
+            <div>
+                <InputDate width="10" @bind-Value="Turista.Disponibility" />
+                <ValidationMessage For="@(() => Turista.Disponibility)" />
+            </div>
             <button class="btn btn-primary" type="submit">Guardar</button>
             <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
         </div>  

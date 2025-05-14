@@ -1,4 +1,5 @@
 ﻿@page "/turistas"
+
 @using CurrieTechnologies.Razor.SweetAlert2
 @using CulturaVivaTours.Shared.Entities
 @using CulturaVivaTours.WEB.Repositories
@@ -8,7 +9,7 @@
 @inject NavigationManager navigationManager
 @inject SweetAlertService swal
 
-<h3>TuristasIndex</h3>
+<h1>Turistas</h1>
 @if (Turistas is null)
 {
     <div class="spinner" />

@@ -1,12 +1,13 @@
 ﻿﻿﻿@using CurrieTechnologies.Razor.SweetAlert2
 @using CulturaVivaTours.Shared.Entities
+
 @page "/turistas/create"
 
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService swal
 
-<h1> Crear Turista</h1>
+<h1>Crear Turista</h1>
 <TuristasForm @ref="turistaForm" Turista="turista" OnValidSubmit="Create" ReturnAction="Return"/>
 
 @code{
@@ -15,7 +16,7 @@
 
     private async Task Create()
     {
-        var responseHttp = await repository.PostAsync("/api/turistas", turista);
+        var responseHttp = await repository.PostAsync("/api/Turistas", turista);
         if (responseHttp.Error)
         {
             var errorMessage = await responseHttp.GetErrorMessage();
