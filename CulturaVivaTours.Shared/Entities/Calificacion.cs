@@ -20,7 +20,7 @@ namespace CulturaVivaTours.Shared.Entities
 
         [Display(Name = "Comentario del turista")]
         [Required]
-        [MaxLength(40, ErrorMessage = "Idioma Demasiado largo")]
+        [MaxLength(40, ErrorMessage = "Comentario demasiado largo")]
         public string Comment { get; set; }
 
         [JsonIgnore]

@@ -1,0 +1,72 @@
+﻿@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+
+@page "/calificaciones/edit/{Id:int}"
+
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+
+
+<h3>CalificacionesEdit</h3>
+
+@if(calificacion is null){
+    <p>Cargando... (No hay calificaciones almacenados)</p>
+}
+else
+{
+    <CalificacionesForm @ref="calificacionForm" Calificacion="calificacion" OnValidSubmit="Edit" ReturnAction="Return" />
+}
+
+@code {
+    private Calificacion calificacion;
+    private CalificacionesForm calificacionForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await repository.GetAsync<Calificacion>($"/api/calificaciones/{Id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/calificaciones");
+                return;
+            }
+            else
+            {
+                var message = await responseHttp.GetErrorMessage();
+                await swal.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+        }
+        else
+        {
+            calificacion = responseHttp.Response;
+        }
+        
+    }
+
+    private async Task Edit()
+    {
+        var responseHttp = await repository.PutAsync($"/api/calificacion", calificacion);
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessage();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+        }
+        else
+        {
+            calificacionForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("/calificaciones");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/calificaciones");
+    }
+}
+

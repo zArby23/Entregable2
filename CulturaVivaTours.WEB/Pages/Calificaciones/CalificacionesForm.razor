@@ -1,0 +1,107 @@
+﻿
+﻿@using CulturaVivaTours.Shared.Entities
+@inject NavigationManager Navigation
+@inject SweetAlertService swal
+@inject HttpClient Http
+
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
+<EditForm EditContext="editContext" OnInvalidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <div class="mb-3">
+
+            <div> 
+                <InputSelect width="100" @bind-Value="Calificacion.TuristaId"> 
+                    <option> Seleccionar Guia a calificar</option>
+                    @foreach(var Turista in turistas)
+                    {
+                        <option value="@Turista.Id">
+                            @Turista.FullName
+                        </option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div>
+                <label>Calificacion (0-5)</label>
+                <InputNumber @bind-Value="Calificacion.Grade" />
+            </div>
+
+            <div>
+                <label>Comentario</label>
+                <InputText width="40" @bind-Value="Calificacion.Comment" />
+            </div>
+
+            <button class="btn btn-primary"  type="submit">Guardar</button>
+            <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+        </div>
+    </div>
+
+</EditForm>
+
+
+
+
+@code {
+    private EditContext editContext = null!;
+    private List<Turista> turistas = new();
+    protected override async Task OnInitializedAsync()
+    {
+        turistas = await Http.GetFromJsonAsync<List<Turista>>("/api/turistas");
+    }
+
+    protected override void OnInitialized()
+    {
+        editContext = new(Calificacion);
+    }
+
+    [EditorRequired]
+    [Parameter]
+    public Calificacion Calificacion { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+
+    public bool FormPostedSuccessfully { get; set; } = false;
+
+
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formWasEdited = editContext.IsModified();
+
+        if (!formWasEdited)
+        {
+            return;
+        }
+
+        if (FormPostedSuccessfully)
+        {
+            return;
+        }
+
+        var result = await swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = "¿Deseas abandonar la página y perder los cambios?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true
+            });
+
+        var confirm = !string.IsNullOrEmpty(result.Value);
+
+        if (confirm)
+        {
+            return;
+        }
+
+        context.PreventNavigation();
+    }
+
+}

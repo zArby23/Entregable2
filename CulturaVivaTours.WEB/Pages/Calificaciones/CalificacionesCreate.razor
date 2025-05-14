@@ -1,0 +1,38 @@
+﻿@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+@page "/calificaciones/create"
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h1> Crear Calificacion</h1>
+<CalificacionesForm @ref="calificacionForm" Calificacion="calificacion" OnValidSubmit="Create" ReturnAction="Return"/>
+
+@code{
+    public Calificacion calificacion = new();
+    public CalificacionesForm calificacionForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/calificaciones", calificacion);
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessage();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+            return;
+        }
+        else
+        {
+            calificacionForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("/calificaciones");
+        }
+        navigationManager.NavigateTo("/calificaciones");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/calificaciones");
+    }
+}
+
