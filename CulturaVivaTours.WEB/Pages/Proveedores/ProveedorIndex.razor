@@ -10,7 +10,7 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService swal
-<h1>ProveedorIndex</h1>
+<h1>Proveedor</h1>
 
 
 
@@ -20,11 +20,6 @@
 }
 else
 {
-
-
-
-
-
     <GenericList MyList="Proveedores">
 
         <Body>
@@ -39,53 +34,39 @@ else
                 <div class="card-body">
                     <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
                     </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Proveedor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var Proveedor in Proveedores!)
+                            {
+                                <tr>
+                                    <td>
+                                        @Proveedor.NombreProveedor
+                                    </td>
+                                    <td>
+                                        @Proveedor.TipoServicio
+                                    </td>
+                                    <td>
+                                        @Proveedor.Contacto
+                                    </td>
+                                    <td>
+                                        @Proveedor.PuntosInteres
+                                    </td>
+                                    <td>
+                                        <a href="/Proveedores/edit/@Proveedor.Id" class="btn btn-warning btn-sm"><i class="oi oi-pencil" /> Editar</a>
+                                        <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(Proveedor))><i class="oi oi-trash" /> Borrar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Proveedor</th>
-
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var Proveedor in Proveedores!)
-                    {
-                        <tr>
-                            <td>
-                                @Proveedor.NombreProveedor
-                            </td>
-
-
-                            <td>
-                                @Proveedor.TipoServicio
-                            </td>
-
-
-                            <td>
-                                @Proveedor.Contacto
-                            </td>
-
-
-                            <td>
-                                @Proveedor.PuntosInteres
-                            </td>
-
-
-
-                            <td>
-                                <a href="/Proveedores/edit/@Proveedor.Id" class="btn btn-warning btn-sm"><i class="oi oi-pencil" /> Editar</a>
-                                <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(Proveedor))><i class="oi oi-trash" /> Borrar</button>
-
-
-                            </td>
-
-
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            
 
         </Body>
 
@@ -107,7 +88,7 @@ else
 
     private async Task Load()
     {
-        var responseHppt = await repository.GetAsync<List<Proveedor>>("/api/Proveedores");
+        var responseHppt = await repository.GetAsync<List<Proveedor>>("/api/proveedores");
         Proveedores = responseHppt.Response!;
     }
 
@@ -128,7 +109,7 @@ else
             return;
         }
 
-        var responseHTTP = await repository.DeleteAsync($"api/Owners/{Proveedor.Id}");
+        var responseHTTP = await repository.DeleteAsync($"api/proveedores/{Proveedor.Id}");
 
         if (responseHTTP.Error)
         {
