@@ -8,8 +8,6 @@
     <DataAnnotationsValidator/>
     <div class="mb-3">
         <div class="mb-3">
-
-
             <label>Nombre</label>
             <div>
                 <InputText width="10" @bind-Value="@Ruta.FirstName" />
@@ -39,8 +37,8 @@
                 <InputText width="10" @bind-Value="@Ruta.Language" />
                 <ValidationMessage For="@(() => Ruta.Language)" />
             </div>
-
-
+            <button class="btn btn-primary" type="submit">Guardar</button>
+            <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
         </div>
     </div>
 
