@@ -27,7 +27,7 @@ namespace CulturaVivaTours.API.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult> Get(int id)
         {
-            var puntoi = await _dataContext.PuntosInteres.FirstOrDefaultAsync(x => x.id == id);
+            var puntoi = await _dataContext.PuntosInteres.FirstOrDefaultAsync(x => x.Id == id);
 
             if (puntoi == null)
             {
@@ -59,7 +59,7 @@ namespace CulturaVivaTours.API.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             var filasAfectadas = await _dataContext.PuntosInteres
-                .Where(x => x.id == id)
+                .Where(x => x.Id == id)
                 .ExecuteDeleteAsync();
 
             if (filasAfectadas == 0)

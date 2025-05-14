@@ -12,7 +12,7 @@ namespace CulturaVivaTours.Shared.Entities
     public class PuntoInteres
     {
       
-        public int id { get; set; }//Primary key
+        public int Id { get; set; }//Primary key
 
         [Display(Name = "Descripcion del Punto de Interes")]
         [Required]
