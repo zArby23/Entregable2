@@ -1,0 +1,48 @@
+﻿@page "/Proveedores/create"
+
+@using CulturaVivaTours.Shared.Entities
+@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.WEB.Repositories
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+
+<h1>ProveedorCreate</h1>
+
+<ProveedorForm @ref="proveedorForm" Proveedor="proveedor" OnSubmit="Create" ReturnAction="Return" />
+
+
+@code 
+{
+    public Proveedor proveedor = new();
+    public ProveedorForm proveedorForm;
+
+    private async Task Create()
+    {
+        
+        var responseHttp = await repository.PostAsync("/api/Proveedores", proveedor);
+        if (responseHttp.Error)
+        {
+
+            var mensaje = await responseHttp.GetErrorMessage();
+            await sweetAlertService.FireAsync("Error", mensaje);
+            return;
+
+
+        }
+        navigationManager.NavigateTo("/proveedor");
+
+    }
+
+    private void Return()
+    {
+
+        navigationManager.NavigateTo("/proveedor");
+
+
+
+    }
+
+}
