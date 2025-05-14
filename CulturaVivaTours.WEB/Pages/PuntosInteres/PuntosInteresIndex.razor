@@ -1,0 +1,162 @@
+﻿@page "/puntos-interes"
+
+@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+@using CulturaVivaTours.WEB.Repositories
+@using CulturaVivaTours.WEB.Shared
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+
+<h1>Puntos de Interés</h1>
+
+@if (PuntosInteres is null)
+{
+    <div class="spinner" />
+}
+else
+{
+    <GenericList MyList="PuntosInteres">
+        <Body>
+            <div class="card">
+                <div class="card-header">
+                    <span>
+                        <i class="oi oi-globe"></i> Puntos de Interes
+                        <a class="btn btn-sm btn-primary float-end" href="/puntos-interes/create"><i class="oi oi-plus"></i>Crear punto de interés</a>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
+                        <table class="table table-stripped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Descipción
+                                    </th>
+                                    <th>
+                                        Ubicación
+                                    </th>
+                                    <th>
+                                        Tipo de Actividad
+                                    </th>
+                                    <th>
+                                        Horario Estimado
+                                    </th>
+                                    <th>
+                                        Ruta que contiene el punto
+                                    </th>
+                                    <th>
+                                        Proveedor del punto
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var puntoInteres in PuntosInteres!)
+                                {
+                                    <tr>
+                                        <td>
+                                            @puntoInteres.Descripcion
+                                        </td>
+                                        <td>
+                                            @puntoInteres.Ubicacion
+                                        </td>
+                                        <td>
+                                            @puntoInteres.TipoActividad
+                                        </td>
+                                        <td>
+                                            @puntoInteres.HorarioEstimado
+                                        </td>
+                                        <td>
+                                            @GetRutaName(puntoInteres.RutaId)
+                                        </td>
+                                        <td>
+                                            @GetProveedorName(puntoInteres.ProveedorId)
+                                        </td>
+                                        <td>
+                                            <a href="/puntos-interes/edit/@puntoInteres.Id" class="btn btn-warning btn-sm"><i class="oi oi-pencil" /> Editar</a>
+                                            <button class="btn btn-danger btn-sm" @onclick=@(() => Delete(puntoInteres))><i class="oi oi-trash" /> Borrar</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </Body>
+    </GenericList>
+}
+
+@code {
+    public List<PuntoInteres> PuntosInteres { get; set; }
+    public List<Ruta> Rutas { get; set; }
+    public List<Proveedor> Proveedores { get; set; }
+
+    private string GetRutaName(int rutaId)
+    {
+        var ruta = Rutas.FirstOrDefault(r => r.Id == rutaId);
+        return ruta != null ? $"{ruta.FirstName}" : "N/A";
+    }
+
+    private string GetProveedorName(int proveedorId)
+    {
+        var proveedor = Proveedores.FirstOrDefault(p => p.Id == proveedorId);
+        return proveedor != null ? $"{proveedor.NombreProveedor}" : "N/A";
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var rutaResponse = await repository.GetAsync<List<Ruta>>("api/rutas");
+        Rutas = rutaResponse.Response!;
+
+        var proveedorResponse = await repository.GetAsync<List<Proveedor>>("api/proveedores");
+        Proveedores = proveedorResponse.Response!;
+
+        var puntoInteresResponse = await repository.GetAsync<List<PuntoInteres>>("api/puntosinteres");
+        PuntosInteres = puntoInteresResponse.Response!;
+    }
+
+    private async Task Delete(PuntoInteres puntoInteres)
+    {
+        var result = await swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = "¿Esta seguro que quieres borrar el registro?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHttp = await repository.DeleteAsync($"api/puntosinteres/{puntoInteres.Id}");
+
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/");
+            }
+            else
+            {
+                var errorMessage = await responseHttp.GetErrorMessage();
+                await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            await Load();
+        }
+
+    }
+}
