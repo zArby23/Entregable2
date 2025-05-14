@@ -1,0 +1,121 @@
+﻿@using CulturaVivaTours.Shared.Entities
+
+@inject NavigationManager Navigation
+@inject SweetAlertService swal
+@inject HttpClient Http
+
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator/>
+    <div class="mb-3">
+        <div class="mb-3">
+            <label>Descripción</label>
+            <div>
+                <InputText width="10" @bind-Value="@PuntoInteres.Descripcion" />
+                <ValidationMessage For="@(() => PuntoInteres.Descripcion)" />
+            </div>
+            <label>Ubicación</label>
+            <div>
+                <InputText width="10" @bind-Value="@PuntoInteres.Ubicacion" />
+                <ValidationMessage For="@(() => PuntoInteres.Ubicacion)" />
+            </div>
+            <label>Tipo de Actividad</label>
+            <div>
+                <InputText width="10" @bind-Value="@PuntoInteres.TipoActividad" />
+                <ValidationMessage For="@(() => PuntoInteres.TipoActividad)" />
+            </div>
+            <label>Horario Estimado</label>
+            <div>
+                <InputDate width="10" @bind-Value="@PuntoInteres.HorarioEstimado" />
+                <ValidationMessage For="@(() => PuntoInteres.HorarioEstimado)" />
+            </div>
+            <label>Ruta que lo contiene</label>
+            <div>
+                <InputSelect width="10" @bind-Value="@PuntoInteres.RutaId" class="form-select">
+                    <option value="">Seleccione una ruta</option>
+                    @foreach (var ruta in rutas)
+                    {
+                        <option value="@ruta.Id">@ruta.FirstName</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => PuntoInteres.RutaId)" />
+            </div>
+            <label>Proveedor del punto</label>
+            <div>
+                <InputSelect width="10" @bind-Value="@PuntoInteres.ProveedorId" class="form-select">
+                    <option value="">Seleccione un proveedor</option>
+                    @foreach (var proveedor in proveedores)
+                    {
+                        <option value="@proveedor.Id">@proveedor.NombreProveedor</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => PuntoInteres.RutaId)" />
+            </div>
+            <button class="btn btn-primary" type="submit">Guardar</button>
+            <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private EditContext editContext = null!;
+    private List<Proveedor> proveedores = new();
+    private List<Ruta> rutas = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        rutas = await Http.GetFromJsonAsync<List<Ruta>>("/api/rutas");
+        proveedores = await Http.GetFromJsonAsync<List<Proveedor>>("/api/proveedores");
+    }
+
+    protected override void OnInitialized()
+    {
+        editContext = new(PuntoInteres);
+    }
+
+    [EditorRequired]
+    [Parameter]
+    public PuntoInteres PuntoInteres { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+
+    public bool FormPostedSuccessfully { get; set; } = false;
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formWasEdited = editContext.IsModified();
+
+        if (!formWasEdited)
+        {
+            return;
+        }
+
+        if (FormPostedSuccessfully)
+        {
+            return;
+        }
+
+        var result = await swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = "¿Deseas abandonar la página y perder los cambios?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true
+            });
+
+        var confirm = !string.IsNullOrEmpty(result.Value);
+
+        if (confirm)
+        {
+            return;
+        }
+
+        context.PreventNavigation();
+    }
+}

@@ -1,0 +1,106 @@
+﻿﻿@using CulturaVivaTours.Shared.Entities
+
+@inject NavigationManager Navigation
+@inject SweetAlertService swal
+
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    
+    <div class="mb-3">
+        <div class="mb-3">
+
+                <label>Nombre</label>
+            <div>
+                <InputText width="10" @bind-Value="Turista.FullName" />
+                <ValidationMessage For="@(() => Turista.FullName)" />
+            </div>
+
+                <label>Nacionalidad</label>
+            <div>
+                <InputText width="10" @bind-Value="Turista.Nationality" />
+                <ValidationMessage For="@(() => Turista.Nationality)" />
+            </div>
+
+                <label>Idioma</label>
+            <div>
+                <InputText width="10" @bind-Value="Turista.Language" />
+                <ValidationMessage For="@(() => Turista.Language)" />
+            </div>
+
+                <label>Alergias(comida)</label>
+            <div>
+                <InputText width="10" @bind-Value="Turista.RestringFood" />
+                <ValidationMessage For="@(() => Turista.RestringFood)" />
+            </div>
+
+                <label>Disponibilidad</label>
+            <div>
+                <InputDate width="10" @bind-Value="Turista.Disponibility" />
+                <ValidationMessage For="@(() => Turista.Disponibility)" />
+            </div>
+            <button class="btn btn-primary" type="submit">Guardar</button>
+            <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+        </div>  
+    </div>
+
+</EditForm>
+
+
+
+
+@code {
+    private EditContext editContext = null!;
+
+    protected override void OnInitialized()
+    {
+        editContext = new(Turista);
+    }
+
+    [EditorRequired]
+    [Parameter]
+    public Turista Turista { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+
+    public bool FormPostedSuccessfully { get; set; } = false;
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formWasEdited = editContext.IsModified();
+
+        if (!formWasEdited)
+        {
+            return;
+        }
+
+        if (FormPostedSuccessfully)
+        {
+            return;
+        }
+
+        var result = await swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = "¿Deseas abandonar la página y perder los cambios?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true
+            });
+
+        var confirm = !string.IsNullOrEmpty(result.Value);
+
+        if (confirm)
+        {
+            return;
+        }
+
+        context.PreventNavigation();
+    }
+
+}

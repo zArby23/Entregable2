@@ -1,0 +1,71 @@
+﻿﻿﻿@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+
+@page "/rutas/edit/{Id:int}"
+
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+
+
+<h3>Editar Ruta</h3>
+
+@if(ruta is null){
+    <p>Cargando... (No hay rutas almacenados)</p>
+}
+else
+{
+    <RutasForm @ref="rutaForm" Ruta="ruta" OnValidSubmit="Edit" ReturnAction="Return" />
+}
+
+@code {
+    private Ruta ruta;
+    private RutasForm rutaForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await repository.GetAsync<Ruta>($"/api/rutas/{Id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/rutas");
+                return;
+            }
+            else
+            {
+                var message = await responseHttp.GetErrorMessage();
+                await swal.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+        }
+        else
+        {
+            ruta = responseHttp.Response;
+        }
+
+    }
+
+    private async Task Edit()
+    {
+        var responseHttp = await repository.PutAsync($"/api/rutas", ruta);
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessage();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+        }
+        else
+        {
+            rutaForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("/rutas");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/rutas");
+    }
+}

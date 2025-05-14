@@ -1,0 +1,71 @@
+﻿﻿@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+
+@page "/guias/edit/{Id:int}"
+
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+
+<h1>Editar Guía</h1>
+
+@if(guia is null){
+    <div class="spinner" />
+    <p>Cargando...</p>
+}
+else
+{
+    <GuiasForm @ref="guiaForm" Guia="guia" OnValidSubmit="Edit" ReturnAction="Return" />
+}
+
+@code {
+    private Guia guia;
+    private GuiasForm guiaForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await repository.GetAsync<Guia>($"/api/guias/{Id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/guias");
+                return;
+            }
+            else
+            {
+                var message = await responseHttp.GetErrorMessage();
+                await swal.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+        }
+        else
+        {
+            guia = responseHttp.Response;
+        }
+        
+    }
+
+    private async Task Edit()
+    {
+        var responseHttp = await repository.PutAsync($"/api/guias", guia);
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessage();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+        }
+        else
+        {
+            guiaForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("/guias");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/guias");
+    }
+}

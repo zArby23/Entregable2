@@ -24,7 +24,7 @@ namespace CulturaVivaTours.Shared.Entities
 
         [Display(Name = "Cuanto dura en horas.")]
         [Required]
-        [Range(0,10)]
+        [Range(0,96)]
         public int Time { get; set; }
 
         [Display(Name = "Tipo de experiencia de la ruta.")]

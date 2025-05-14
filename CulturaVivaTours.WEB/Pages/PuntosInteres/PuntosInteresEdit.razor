@@ -1,0 +1,71 @@
+﻿@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+
+@page "/puntos-interes/edit/{Id:int}"
+
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+
+<h1>Editar Puntos de Interes</h1>
+@if (puntoInteres is null)
+{
+    <div class="spinner" />
+    <p>Cargando...</p>
+}
+else
+{
+    <PuntosInteresForm @ref="puntoInteresForm" PuntoInteres="puntoInteres" OnValidSubmit="Edit" ReturnAction="Return" />
+}
+
+@code {
+    private PuntoInteres puntoInteres;
+    private PuntosInteresForm puntoInteresForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await repository.GetAsync<PuntoInteres>($"/api/puntosinteres/{Id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/puntos-interes");
+                return;
+            }
+            else
+            {
+                var message = await responseHttp.GetErrorMessage();
+                await swal.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+        }
+        else
+        {
+            puntoInteres = responseHttp.Response;
+        }
+
+    }
+
+    private async Task Edit()
+    {
+        var responseHttp = await repository.PutAsync($"/api/puntosinteres", puntoInteres);
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessage();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+        }
+        else
+        {
+            puntoInteresForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("/puntos-interes");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/puntos-interes");
+    }
+}

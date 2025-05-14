@@ -1,0 +1,38 @@
+﻿﻿﻿@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+
+@page "/turistas/create"
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h1>Crear Turista</h1>
+<TuristasForm @ref="turistaForm" Turista="turista" OnValidSubmit="Create" ReturnAction="Return"/>
+
+@code{
+    public Turista turista = new();
+    public TuristasForm turistaForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/Turistas", turista);
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessage();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+            return;
+        }
+        else
+        {
+            turistaForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("/turistas");
+        }
+        navigationManager.NavigateTo("/turistas");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/turistas");
+    }
+}

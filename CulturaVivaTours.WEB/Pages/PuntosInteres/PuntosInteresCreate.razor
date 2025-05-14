@@ -1,0 +1,39 @@
+﻿﻿@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+
+@page "/puntos-interes/create"
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h3>Crear Punto de Interes</h3>
+
+<PuntosInteresForm @ref="puntoInteresForm" PuntoInteres="puntoInteres" OnValidSubmit="Create" ReturnAction="Return"/>
+
+@code {
+    public PuntoInteres puntoInteres = new();
+    public PuntosInteresForm puntoInteresForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/puntosinteres", puntoInteres);
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessage();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+            return;
+        }
+        else
+        {
+            puntoInteresForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("/puntos-interes");
+        }
+        navigationManager.NavigateTo("/puntos-interes");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/puntos-interes");
+    }
+}

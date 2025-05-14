@@ -10,7 +10,7 @@ namespace CulturaVivaTours.Shared.Entities
 {
     public class Proveedor
     {
-        public int id { get; set; }
+        public int Id { get; set; }
 
         [Display(Name = "Descripcion del proveedor")]
         [Required]
@@ -26,9 +26,6 @@ namespace CulturaVivaTours.Shared.Entities
         [Required]
         [MaxLength(50, ErrorMessage = "Mucho texto")]
         public string Contacto { get; set; }
-
-        [Display(Name = "Disponibilidad del proveedor")]
-        public Boolean Disponible { get; set; }
 
         [JsonIgnore]
         public ICollection<PuntoInteres> PuntosInteres{ get; set; }
