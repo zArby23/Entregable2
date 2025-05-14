@@ -63,8 +63,7 @@ namespace CulturaVivaTours.API.Data
                 {
                     NombreProveedor = "Calisto",
                     TipoServicio = "Cultural",
-                    Contacto = "calisto123@gamil.com",
-                    Disponible = true
+                    Contacto = "calisto123@gamil.com"
                 });
 
             }
