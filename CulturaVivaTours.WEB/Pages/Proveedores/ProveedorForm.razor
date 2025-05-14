@@ -4,7 +4,7 @@
 @inject SweetAlertService swal
 
 <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
-<EditForm Model="Proveedor" OnValidSubmit="OnSubmit">
+<EditForm Model="Proveedor" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator/>
     <div class="mb-3">
         <label>Nombre</label>
@@ -43,7 +43,7 @@
 
     [EditorRequired]
     [Parameter]
-    public EventCallback OnSubmit { get; set; }
+    public EventCallback OnValidSubmit { get; set; }
 
 
     [EditorRequired]
