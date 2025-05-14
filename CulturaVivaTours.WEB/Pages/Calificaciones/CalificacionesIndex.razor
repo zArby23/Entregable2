@@ -8,7 +8,7 @@
 @inject NavigationManager navigationManager
 @inject SweetAlertService swal
 
-<h3>CalificacionesIndex</h3>
+<h3>Calificaciones</h3>
 @if (Calificaciones is null)
 {
     <div class="spinner" />
@@ -30,6 +30,12 @@ else
                             <thead>
                                 <tr>
                                     <th>
+                                        Turista
+                                    </th>
+                                    <th>
+                                        Punto de Interes calificado
+                                    </th>
+                                    <th>
                                         Puntuacion
                                     </th>
                                     <th>
@@ -42,6 +48,12 @@ else
                                 {
                                     <tr>
                                         <td>
+                                            @GetTuristaName(calificacion.TuristaId)
+                                        </td>
+                                        <td>
+                                            @GetPuntoInteresDesc(calificacion.PuntoInteresId)
+                                        </td>
+                                        <td>
                                             @calificacion.Grade
                                         </td>
                                         <td>
@@ -49,8 +61,8 @@ else
                                         </td>
 
                                         <td>
-                                            <a href="/calificaciones/edit/@calificacion.Id" class="btn btn-warning btn-sm"><i class="oi oi-pencil" /> Editar</a>
-                                            <button class="btn btn-danger btn-sm" @onclick=@(() => Delete(calificacion))><i class="oi oi-trash" /> Borrar</button>
+                                            <a href="/calificaciones/edit/@calificacion.Id" class="btn btn-warning btn-sm"><i class="oi oi-pencil" />Editar</a>
+                                            <button class="btn btn-danger btn-sm" @onclick=@(() => Delete(calificacion))><i class="oi oi-trash" />Borrar</button>
                                         </td>
                                     </tr>
                                 }
@@ -67,6 +79,20 @@ else
 
 @code {
     public List<Calificacion> Calificaciones { get; set; }
+    public List<Turista> Turistas { get; set; }
+    public List<PuntoInteres> PuntosInteres { get; set; }
+    
+    private string GetTuristaName(int turistaId)
+    {
+        var turista = Turistas.FirstOrDefault(t => t.Id == turistaId);
+        return turista != null ? $"{turista.FullName}" : "N/A";
+    }
+
+    private string GetPuntoInteresDesc(int puntoInteresId)
+    {
+        var puntoInteres = PuntosInteres.FirstOrDefault(p => p.Id == puntoInteresId);
+        return puntoInteres != null ? $"{puntoInteres.Descripcion}" : "N/A";
+    }
 
     protected async override Task OnInitializedAsync()
     {
@@ -75,8 +101,12 @@ else
 
     private async Task Load()
     {
-        var responseHttp = await repository.GetAsync<List<Calificacion>>("api/calificaciones");
-        Calificaciones = responseHttp.Response!;
+        var turistaResponse = await repository.GetAsync<List<Turista>>("api/Turistas");
+        Turistas = turistaResponse.Response!;
+        var puntoInteresResponse = await repository.GetAsync<List<PuntoInteres>>("api/puntosinteres");
+        PuntosInteres = puntoInteresResponse.Response!;
+        var calificacionResponse = await repository.GetAsync<List<Calificacion>>("api/calificaciones");
+        Calificaciones = calificacionResponse.Response!;
     }
 
     private async Task Delete(Calificacion calificacion)

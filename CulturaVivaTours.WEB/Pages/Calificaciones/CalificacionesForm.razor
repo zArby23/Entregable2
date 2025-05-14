@@ -1,11 +1,11 @@
-﻿
 ﻿@using CulturaVivaTours.Shared.Entities
+
 @inject NavigationManager Navigation
 @inject SweetAlertService swal
 @inject HttpClient Http
 
 <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
-<EditForm EditContext="editContext" OnInvalidSubmit="OnValidSubmit">
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
 
     <div class="mb-3">
@@ -13,7 +13,7 @@
 
             <div> 
                 <InputSelect width="100" @bind-Value="Calificacion.TuristaId"> 
-                    <option> Seleccionar Guia a calificar</option>
+                    <option>¿Qué turista califica?</option>
                     @foreach(var Turista in turistas)
                     {
                         <option value="@Turista.Id">
@@ -22,18 +22,27 @@
                     }
                 </InputSelect>
             </div>
-
             <div>
+                <InputSelect width="100" @bind-Value="Calificacion.PuntoInteresId">
+                    <option> Seleccionar punto de interés a calificar</option>
+                    @foreach (var PuntoInteres in puntosInteres)
+                    {
+                        <option value="@PuntoInteres.Id">
+                            @PuntoInteres.Descripcion
+                        </option>
+                    }
+                </InputSelect>
+            </div>
                 <label>Calificacion (0-5)</label>
+            <div>
                 <InputNumber @bind-Value="Calificacion.Grade" />
             </div>
-
-            <div>
                 <label>Comentario</label>
+            <div>
                 <InputText width="40" @bind-Value="Calificacion.Comment" />
             </div>
 
-            <button class="btn btn-primary"  type="submit">Guardar</button>
+            <button class="btn btn-primary" type="submit">Guardar</button>
             <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
         </div>
     </div>
@@ -46,9 +55,11 @@
 @code {
     private EditContext editContext = null!;
     private List<Turista> turistas = new();
+    private List<PuntoInteres> puntosInteres = new();
     protected override async Task OnInitializedAsync()
     {
         turistas = await Http.GetFromJsonAsync<List<Turista>>("/api/turistas");
+        puntosInteres = await Http.GetFromJsonAsync<List<PuntoInteres>>("/api/puntosinteres");
     }
 
     protected override void OnInitialized()
