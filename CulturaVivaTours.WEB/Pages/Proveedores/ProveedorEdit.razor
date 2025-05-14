@@ -51,7 +51,7 @@ else
 
     private async Task Edit()
     {
-        var responseHTTP = await repository.PutAsync("/api/Proveedores", proveedor);
+        var responseHTTP = await repository.PutAsync("/api/proveedores", proveedor);
 
         if (responseHTTP.Error)
         {

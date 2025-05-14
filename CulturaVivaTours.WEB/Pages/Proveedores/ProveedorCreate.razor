@@ -11,7 +11,7 @@
 
 <h1>ProveedorCreate</h1>
 
-<ProveedorForm @ref="proveedorForm" Proveedor="proveedor" OnSubmit="Create" ReturnAction="Return" />
+<ProveedorForm @ref="proveedorForm" Proveedor="proveedor" OnValidSubmit="Create" ReturnAction="Return" />
 
 
 @code 
@@ -22,7 +22,7 @@
     private async Task Create()
     {
         
-        var responseHttp = await repository.PostAsync("/api/Proveedores", proveedor);
+        var responseHttp = await repository.PostAsync("/api/proveedores", proveedor);
         if (responseHttp.Error)
         {
 
