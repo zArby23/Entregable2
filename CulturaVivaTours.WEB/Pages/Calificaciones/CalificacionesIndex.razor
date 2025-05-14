@@ -1,0 +1,118 @@
+﻿@page "/calificaciones"
+@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+@using CulturaVivaTours.WEB.Repositories
+@using CulturaVivaTours.WEB.Shared
+
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<h3>CalificacionesIndex</h3>
+@if (Calificaciones is null)
+{
+    <div class="spinner" />
+}
+else
+{
+    <GenericList MyList="Calificaciones">
+        <Body>
+            <div class="card">
+                <div class="card-header">
+                    <span>
+                        <i class="oi oi-globe"></i> Calificaciones
+                        <a class="btn btn-sm btn-primary float-end" href="/calificaciones/create"><i class="oi oi-plus"></i>Crear calificacion</a>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
+                        <table class="table table-stripped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Puntuacion
+                                    </th>
+                                    <th>
+                                        Comentario
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var calificacion in Calificaciones!)
+                                {
+                                    <tr>
+                                        <td>
+                                            @calificacion.Grade
+                                        </td>
+                                        <td>
+                                            @calificacion.Comment
+                                        </td>
+
+                                        <td>
+                                            <a href="/calificaciones/edit/@calificacion.Id" class="btn btn-warning btn-sm"><i class="oi oi-pencil" /> Editar</a>
+                                            <button class="btn btn-danger btn-sm" @onclick=@(() => Delete(calificacion))><i class="oi oi-trash" /> Borrar</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </Body>
+    </GenericList>
+}
+
+
+
+@code {
+    public List<Calificacion> Calificaciones { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+    private async Task Load()
+    {
+        var responseHttp = await repository.GetAsync<List<Calificacion>>("api/calificaciones");
+        Calificaciones = responseHttp.Response!;
+    }
+
+    private async Task Delete(Calificacion calificacion)
+    {
+        var result = await swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = "¿Esta seguro que quieres borrar el registro?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHttp = await repository.DeleteAsync($"api/calificaciones/{calificacion.Id}");
+
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/");
+            }
+            else
+            {
+                var errorMessage = await responseHttp.GetErrorMessage();
+                await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            await Load();
+        }
+
+    }
+}

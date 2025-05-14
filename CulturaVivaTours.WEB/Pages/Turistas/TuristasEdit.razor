@@ -1,0 +1,71 @@
+﻿﻿﻿@using CurrieTechnologies.Razor.SweetAlert2
+@using CulturaVivaTours.Shared.Entities
+
+@page "/turistas/edit/{Id:int}"
+
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService swal
+
+
+<h3>TuristasEdit</h3>
+
+@if(turista is null){
+    <p>Cargando... (No hay guías almacenados)</p>
+}
+else
+{
+    <TuristasForm @ref="turistaForm" Turista="turista" OnValidSubmit="Edit" ReturnAction="Return" />
+}
+
+@code {
+    private Turista turista;
+    private TuristasForm turistaForm;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await repository.GetAsync<Turista>($"/api/turistas/{Id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/turistas");
+                return;
+            }
+            else
+            {
+                var message = await responseHttp.GetErrorMessage();
+                await swal.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+        }
+        else
+        {
+            turista = responseHttp.Response;
+        }
+        
+    }
+
+    private async Task Edit()
+    {
+        var responseHttp = await repository.PutAsync($"/api/turistas", turista);
+        if (responseHttp.Error)
+        {
+            var errorMessage = await responseHttp.GetErrorMessage();
+            await swal.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+        }
+        else
+        {
+            turistaForm!.FormPostedSuccessfully = true;
+            navigationManager.NavigateTo("/turistas");
+        }
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/turistas");
+    }
+}
