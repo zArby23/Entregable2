@@ -1,4 +1,5 @@
-﻿@using CulturaVivaTours.Shared.Entities
+﻿@page "/Proveedores/Edit/{Id:int}"
+@using CulturaVivaTours.Shared.Entities
 @using CurrieTechnologies.Razor.SweetAlert2
 @using CulturaVivaTours.WEB.Repositories
 
@@ -6,6 +7,17 @@
 @inject IRepository repository
 @inject SweetAlertService swal
 
+<h1>Editar Proveedores</h1>
+
+@if (proveedor is null)
+{
+    <div class="spinner" />
+    <p>Cargando...</p>
+}
+else
+{
+    <ProveedorForm @ref="proveedorForm" Proveedor="proveedor" OnValidSubmit="Edit" ReturnAction="Return" />
+}
 
 @code 
 {
@@ -39,7 +51,7 @@
 
     private async Task Edit()
     {
-        var responseHTTP = await repository.PutAsync("/api/owners", proveedor);
+        var responseHTTP = await repository.PutAsync("/api/Proveedores", proveedor);
 
         if (responseHTTP.Error)
         {
